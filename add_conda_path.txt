@@ -1,0 +1,1 @@
+setx PATH "%PATH%;C:\Users\pclab\anaconda3\Scripts;C:\Users\pclab\anaconda3" /m
