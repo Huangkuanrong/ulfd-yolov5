@@ -13,9 +13,9 @@ from data.constant import culane_row_anchor, tusimple_row_anchor
 backbone = '18'  # 骨干网络
 dataset = '11'  # 数据集类型
 griding_num = 100  # 网格数
-test_model = 'content/Ultra-Fast-Lane-Detection/tusimple_18.pth'
-data_root = 'content/Ultra-Fast-Lane-Detection/TUSIMPLEROOT/test_one'
-data_save = 'content/result/ufld'
+model_path = 'content/Ultra-Fast-Lane-Detection/tusimple_18.pth'
+img_path = 'content/Ultra-Fast-Lane-Detection/TUSIMPLEROOT/img'
+output_path = 'content/result/ufld'
 
 
 import torch
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     net = parsingNet(pretrained=False, backbone=backbone, cls_dim=(griding_num + 1, cls_num_per_lane, 4),
                                     use_aux=False).cuda() # we dont need auxiliary segmentation in testing
 
-    state_dict = torch.load(test_model, map_location='cpu')['model']
+    state_dict = torch.load(model_path, map_location='cpu')['model']
     compatible_state_dict = {}
     for k, v in state_dict.items():
         if 'module.' in k:
@@ -85,18 +85,18 @@ if __name__ == "__main__":
     ])
     if dataset == 'CULane':
         splits = ['test0_normal.txt', 'test1_crowd.txt', 'test2_hlight.txt', 'test3_shadow.txt', 'test4_noline.txt', 'test5_arrow.txt', 'test6_curve.txt', 'test7_cross.txt', 'test8_night.txt']
-        datasets = [LaneTestDataset(data_root,os.path.join(data_root, 'list/test_split/'+split),img_transform = img_transforms) for split in splits]
+        datasets = [LaneTestDataset(img_path,os.path.join(img_path, 'list/test_split/'+split),img_transform = img_transforms) for split in splits]
 
         img_w, img_h = 1640, 590
         row_anchor = culane_row_anchor
     elif dataset == 'Tusimple':
         splits = ['test.txt']
-        datasets = [LaneTestDataset(data_root,os.path.join(data_root, split),img_transform = img_transforms) for split in splits]
+        datasets = [LaneTestDataset(img_path,os.path.join(img_path, split),img_transform = img_transforms) for split in splits]
         img_w, img_h = 1280, 720
         row_anchor = tusimple_row_anchor
     else:  # 自定义数据集
         # raise NotImplementedError
-        datasets = TestDataset(data_root, img_transform=img_transforms)
+        datasets = TestDataset(img_path, img_transform=img_transforms)
         img_w, img_h = 1280, 720
         row_anchor = tusimple_row_anchor
 
@@ -127,8 +127,8 @@ if __name__ == "__main__":
 
             # import pdb; pdb.set_trace()
             coordination_save = []
-            # img_path = os.path.join(data_root,names[0])
-            img_path = data_root + "/road.jpg"
+            # img_path = os.path.join(img_path,names[0])
+            img_path = img_path + "/road.jpg"
             vis = cv2.imread(img_path)  # 读取图像 [720,1280,3]
             cv2.imshow('img',vis)
             for i in range(out_j.shape[1]):  # 遍历列
@@ -147,18 +147,15 @@ if __name__ == "__main__":
             # Convert the time to a string in a desired format
             time_string = current_time.strftime("%Y%m%d_%H%M%S")
             
-            save_file_txt = data_save + "/result_" + time_string + ".txt"
-            save_file_jpg = data_save + "/result_" + time_string + ".jpg"
+            save_file_basic = output_path + "/result_" + time_string
+            save_file_txt = output_path + "/result_" + time_string + ".txt"
+            save_file_jpg = output_path + "/result_" + time_string + ".jpg"
             
             # 保存检测结果图
             with open(save_file_txt, 'w', encoding='utf-8') as f:
                 f.write('\n'.join(f'{tup[0]} {tup[1]}' for tup in coordination_save))
-                
-            # cv2.imshow("result",vis)
+            
+            with open(output_path + "/result.txt", 'w', encoding='utf-8') as f:
+                f.write(save_file_basic)
 
             cv2.imwrite(save_file_jpg, vis)
-
-        # 保存视频结果（注释掉）
-        #     vout.write(vis)
-        #
-        # vout.release()

@@ -37,14 +37,17 @@ current_time = datetime.datetime.now()
 # Convert the time to a string in a desired format
 time_string = current_time.strftime("%Y%m%d_%H%M%S")
 
-file_path_jpg = output_path + "/result_" + time_string + ".jpg"
-file_path_txt = output_path + "/result_" + time_string + ".txt"
+save_file_basic = output_path + "/result_" + time_string
+save_file_jpg = output_path + "/result_" + time_string + ".jpg"
+save_file_txt = output_path + "/result_" + time_string + ".txt"
 
 # Display image with bounding boxes
-cv2.imwrite(file_path_jpg, img)
+cv2.imwrite(save_file_jpg, img)
 
 # Save coordinates as txt file
-
-with open(file_path_txt, 'w') as f:
+with open(save_file_txt, 'w') as f:
     for i, box in enumerate(coordinates):
         f.write(f"{' '.join([str(coord) for coord in box])}\n")
+        
+with open(output_path + "/result.txt", 'w', encoding='utf-8') as f:
+    f.write(save_file_basic)
