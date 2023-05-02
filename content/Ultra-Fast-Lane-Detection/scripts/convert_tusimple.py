@@ -143,17 +143,19 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args().parse_args()
+    root_train_location = args.root + "/train_set"
+    root_test_location = args.root + "/test_set"
 
     # training set
-    names,line_txt = get_tusimple_list(args.root,  ['label_data_0601.json','label_data_0531.json','label_data_0313.json'])
+    names,line_txt = get_tusimple_list(root_train_location,  ['label_data_0601.json','label_data_0531.json','label_data_0313.json'])
     # generate segmentation and training list for training
-    generate_segmentation_and_train_list(args.root, line_txt, names)
+    generate_segmentation_and_train_list(root_train_location, line_txt, names)
 
     # testing set
-    names,line_txt = get_tusimple_list(args.root, ['test_tasks_0627.json'])
+    names,line_txt = get_tusimple_list(root_test_location, ['test_tasks_0627.json'])
     # generate testing set for testing
-    # filepath = os.path.join(args.root,'test.txt')
-    filepath = args.root + "/test.txt"
+    # filepath = os.path.join(root_location,'test.txt')
+    filepath = root_test_location + '/test.txt'
     with open(filepath,'w') as fp:
         for name in names:
             fp.write(name + '\n')

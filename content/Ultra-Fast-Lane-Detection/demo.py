@@ -8,6 +8,7 @@ import numpy as np
 import torchvision.transforms as transforms
 from data.dataset import LaneTestDataset
 from data.constant import culane_row_anchor, tusimple_row_anchor
+import argparse
 
 # 指定测试的配置信息
 backbone = '18'  # 骨干网络
@@ -48,11 +49,17 @@ class TestDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.list)
+    
+# def get_args():
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('--img', required=True)
+#     return parser
 
 if __name__ == "__main__":
     torch.backends.cudnn.benchmark = True  # 加速
 
-    # args, cfg = merge_config()   # 用终端指定配置信息
+    args, cfg = merge_config()   # 用终端指定配置信息
+    img_path = os.path.dirname(args.img)
     dist_print('start testing...')
     assert backbone in ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']
 
@@ -127,10 +134,17 @@ if __name__ == "__main__":
 
             # import pdb; pdb.set_trace()
             coordination_save = []
+            
             # img_path = os.path.join(img_path,names[0])
-            img_path = img_path + "/road.jpg"
+            
+            # manual get img_path
+            # img_path = img_path + "/road.jpg"
+
+            # get args from subprocess line
+            img_path = args.img
+
             vis = cv2.imread(img_path)  # 读取图像 [720,1280,3]
-            cv2.imshow('img',vis)
+            
             for i in range(out_j.shape[1]):  # 遍历列
                 if np.sum(out_j[:, i] != 0) > 2:  # 非0单元格的数量大于2
                     sum1 = np.sum(out_j[:, i] != 0)

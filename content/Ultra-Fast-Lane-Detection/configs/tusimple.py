@@ -1,8 +1,8 @@
 # DATA
 dataset='Tusimple'
-data_root = None
+data_root = 'content/Ultra-Fast-Lane-Detection/TUSIMPLEROOT/train_set'
 
-# TRAIN
+# TRAIN 
 epoch = 100
 batch_size = 32
 optimizer = 'Adam'    #['SGD','Adam']
@@ -29,14 +29,16 @@ shp_loss_w = 0.0
 # EXP
 note = ''
 
-log_path = None
+log_path = 'content/result/ufld'
 
 # FINETUNE or RESUME MODEL PATH
 finetune = None
 resume = None
 
 # TEST
-test_model = None
-test_work_dir = None
+test_model = ''
+test_work_dir = ''
 
 num_lanes = 4
+
+img = ''

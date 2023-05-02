@@ -1,0 +1,20 @@
+#Install pytorch and cudatoolkit
+conda install pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit=11.3 -c pytorch
+
+#Run ufld requirements
+pip install -r content/Ultra-Fast-Lane-Detection/requirements.txt
+
+#Run ufld pre-trained demo
+python content/Ultra-Fast-Lane-Detection/demo.py content/Ultra-Fast-Lane-Detection/configs/tusimple.py --img content/img/road.jpg 
+
+#Run yolo requirements
+pip install -r content/yolov5/requirements.txt
+
+#Run yolo pre-trained demo
+python content/yolov5/yolov5s.py --img content/img/road.jpg 
+
+#Convert Tusimple
+python content/Ultra-Fast-Lane-Detection/scripts/convert_tusimple.py --root content/Ultra-Fast-Lane-Detection/TUSIMPLEROOT
+
+
+

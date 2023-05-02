@@ -13,7 +13,6 @@ from utils.common import get_work_dir, get_logger
 
 import time
 
-
 def inference(net, data_label, use_aux):
     if use_aux:
         img, cls_label, seg_label = data_label

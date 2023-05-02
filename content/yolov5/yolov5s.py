@@ -2,11 +2,20 @@ import torch
 import cv2
 from pathlib import Path
 import datetime
+import argparse
 #from google.colab.patches import cv2_imshow
 
 model_path = 'content/yolov5/yolov5s.pt'
 img_path = 'content/yolov5/img/road.jpg'
 output_path = 'content/result/yolo'
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--img', required=True)
+    return parser
+
+args = get_args().parse_args()
+img_path = args.img
 
 # Load YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path)
@@ -51,3 +60,4 @@ with open(save_file_txt, 'w') as f:
         
 with open(output_path + "/result.txt", 'w', encoding='utf-8') as f:
     f.write(save_file_basic)
+

@@ -1,0 +1,5 @@
+conda activate lane-det-yolo
+
+cd D:/111-2_Class/colabLocal
+
+D:
