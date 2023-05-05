@@ -4,15 +4,28 @@ import cv2
 import matplotlib.pyplot as plt
 from shapely import geometry
 import math
+import datetime
+import argparse
 
 # Get the directory path of the current Python file
 FILE_PATH = os.path.abspath(__file__) # C:/Users/.../Ultra-Fast-Lane-Detection/main.py
 DRIVE_NAME, _ = os.path.splitdrive(FILE_PATH) # C:
 BASE_DIR = os.path.dirname(FILE_PATH) # C:/Users/.../Ultra-Fast-Lane-Detection
 
-IMG_DIR = os.path.join(BASE_DIR, 'content', 'img', 'road.jpg')
+# IMG_DIR = os.path.join(BASE_DIR, 'content', 'img', 'road.jpg')
+IMG_DIR = ""
 UFLD_RESULT_DIR = os.path.join(BASE_DIR, 'content', 'result', 'ufld', 'result.txt')
 YOLO_RESULT_DIR = os.path.join(BASE_DIR, 'content', 'result', 'yolo', 'result.txt')
+
+SAVE_FILE_DIR = os.path.join(BASE_DIR, 'content', 'result', 'join')
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--img', required=True)
+    return parser
+
+args = get_args().parse_args()
+IMG_DIR = args.img
 
 def dot_between_two_dot(point_1, point_2):
     new_x = int((point_1[0] + point_2[0]) / 2)
@@ -21,7 +34,6 @@ def dot_between_two_dot(point_1, point_2):
 
 def dis_between_two_dot(point_1, point_2):
     return math.sqrt(((point_1[0] - point_2[0]) ** 2)+((point_1[1] - point_2[1]) ** 2))
-
 
 def if_inPoly(polygon, Points):
     line = geometry.LineString(polygon)
@@ -144,7 +156,21 @@ with open(UFLD_RESULT_DIR, 'r') as f:
                 img = cv2.rectangle(img, (box_index[0], box_index[1]), (box_index[2], box_index[3]), (0,0,255), 2)
 
                 
+    #------------------------------------------------------------------------------#  車框顯示
+    # Get the current time
+    current_time = datetime.datetime.now()
 
-    cv2.imshow('test', img)
+    # Convert the time to a string in a desired format
+    time_string = current_time.strftime("%Y%m%d_%H%M%S")
+    
+    output_path = 'content/result/join-result/'
+    save_file_basic = output_path + "/result_" + time_string
+    save_file_jpg = output_path + "result_" + time_string + ".jpg"
+    
+    with open(output_path + "/result.txt", 'w', encoding='utf-8') as f:
+        f.write(save_file_basic)
+    
+    cv2.imwrite(save_file_jpg, img)
+    # cv2.imshow('test', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

@@ -15,7 +15,8 @@ BASE_DIR = os.path.dirname(FILE_PATH) # C:/Users/.../Ultra-Fast-Lane-Detection
 
 UFLD_RESULT_DIR = os.path.join(BASE_DIR, 'content', 'result', 'ufld', 'result.txt')
 YOLO_RESULT_DIR = os.path.join(BASE_DIR, 'content', 'result', 'yolo', 'result.txt')
-IMG_DIR = ""
+JOIN_RESULT_DIR = os.path.join(BASE_DIR, 'content', 'result', 'join-result', 'result.txt')
+IMG_DIR = os.path.join(BASE_DIR, 'content', 'img', 'road.jpg')
 
 def choose_image_file():
     global IMG_DIR
@@ -67,6 +68,26 @@ def run_yolo():
     except subprocess.CalledProcessError:
         messagebox.showerror("Error", "YOLOv5 failed!")
 
+# Create the Join button
+def run_join():
+    global IMG_DIR
+    # Activate the conda environment and run the command
+    command = f'cd {BASE_DIR} && {DRIVE_NAME} && conda activate lane-det-yolo && python {BASE_DIR}/join.py --img {IMG_DIR}'
+    try:
+        subprocess.run(command, shell=True, check=True)
+        with open(JOIN_RESULT_DIR, 'r') as f:
+            file_dir = BASE_DIR + "\\" + f.readline().strip() + '.jpg'
+            img = cv2.imread(file_dir)
+
+            # Show the image in a new window
+            cv2.namedWindow("Join Result", cv2.WINDOW_NORMAL)
+            cv2.imshow("Join Result", img)
+            cv2.waitKey(0)
+            
+        messagebox.showinfo("Success", "Join completed successfully!")
+    except subprocess.CalledProcessError:
+        messagebox.showerror("Error", "Join failed!")
+
 # Create the main window
 root = tk.Tk()
 root.title("Lane Detection Tools")
@@ -99,5 +120,9 @@ button_ufld.pack(side=tk.LEFT, padx=10)
 # Create the YOLO button
 button_yolo = tk.Button(frame_buttons, text="YOLOv5", width=25, height=2, command=run_yolo)
 button_yolo.pack(side=tk.LEFT, padx=10)
+
+# Create the Join button
+button_join = tk.Button(frame_buttons, text="Join", width=25, height=2, command=run_join)
+button_join.pack(side=tk.LEFT, padx=10)
 
 root.mainloop()

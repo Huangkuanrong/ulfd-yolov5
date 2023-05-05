@@ -17,4 +17,7 @@ python content/yolov5/yolov5s.py --img content/img/road.jpg
 python content/Ultra-Fast-Lane-Detection/scripts/convert_tusimple.py --root content/Ultra-Fast-Lane-Detection/TUSIMPLEROOT
 
 
+python join.py --img content/img/road.jpg
+
+
 
