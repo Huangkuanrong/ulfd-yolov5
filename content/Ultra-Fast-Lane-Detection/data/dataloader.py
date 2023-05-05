@@ -27,7 +27,7 @@ def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distr
     ])
     if dataset == 'CULane':
         train_dataset = LaneClsDataset(data_root,
-                                           os.path.join(data_root, 'list/train_gt.txt'),
+                                           data_root+'/list/train_gt.txt',
                                            img_transform=img_transform, target_transform=target_transform,
                                            simu_transform = simu_transform,
                                            segment_transform=segment_transform, 
@@ -37,7 +37,7 @@ def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distr
 
     elif dataset == 'Tusimple':
         train_dataset = LaneClsDataset(data_root,
-                                           os.path.join(data_root, 'train_gt.txt'),
+                                           data_root+'/train_gt.txt',
                                            img_transform=img_transform, target_transform=target_transform,
                                            simu_transform = simu_transform,
                                            griding_num=griding_num, 
@@ -66,7 +66,9 @@ def get_test_loader(batch_size, data_root,dataset, distributed):
         test_dataset = LaneTestDataset(data_root,os.path.join(data_root, 'list/test.txt'),img_transform = img_transforms)
         cls_num_per_lane = 18
     elif dataset == 'Tusimple':
-        test_dataset = LaneTestDataset(data_root,os.path.join(data_root, 'test.txt'), img_transform = img_transforms)
+        # test_dataset_location = os.path.join(data_root, 'test.txt')
+        test_dataset_location = data_root + '/test.txt'
+        test_dataset = LaneTestDataset(data_root, test_dataset_location, img_transform = img_transforms)
         cls_num_per_lane = 56
 
     if distributed:
